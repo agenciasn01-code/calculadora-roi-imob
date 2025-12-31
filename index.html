@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de ROI Imobiliário</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-900 p-5 font-sans text-slate-100">
+    <div class="max-w-md mx-auto bg-white p-8 rounded-2xl shadow-2xl text-slate-800">
+        <div class="text-center mb-6">
+            <h1 class="text-2xl font-extrabold text-slate-900">Calculadora de ROI</h1>
+            <p class="text-slate-500 text-sm">Mercado Imobiliário</p>
+        </div>
+        
+        <div class="space-y-4">
+            <div>
+                <label class="block text-xs font-semibold text-slate-500 uppercase">Investimento Total (R$)</label>
+                <input type="number" id="investimento" class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500" placeholder="Ex: 2000">
+            </div>
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-500 uppercase">Nº de Leads</label>
+                    <input type="number" id="leads" class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500" placeholder="Ex: 50">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-500 uppercase">Conversão %</label>
+                    <input type="number" id="conversao" class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500" placeholder="1">
+                </div>
+            </div>
+            <div>
+                <label class="block text-xs font-semibold text-slate-500 uppercase">Valor do Imóvel (R$)</label>
+                <input type="number" id="valorImovel" class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500" placeholder="Ex: 500000">
+            </div>
+            <div>
+                <label class="block text-xs font-semibold text-slate-500 uppercase">Sua Comissão (%)</label>
+                <input type="number" id="comissao" class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500" placeholder="Ex: 5">
+            </div>
+            <button onclick="calcular()" class="w-full bg-blue-600 text-white py-4 rounded-xl font-bold text-lg hover:bg-blue-700 transition-all shadow-lg active:scale-95">Calcular Retorno</button>
+        </div>
+
+        <div id="resultado" class="mt-8 hidden space-y-4 border-t border-slate-100 pt-6">
+            <div class="flex justify-between items-center bg-blue-50 p-3 rounded-lg text-blue-800 font-bold">
+                <span>Vendas Estimadas:</span>
+                <span id="resVendas"></span>
+            </div>
+            <div class="bg-green-100 p-4 rounded-xl text-center">
+                <p class="text-green-800 text-sm font-medium uppercase tracking-wider">Comissão Total Bruta</p>
+                <p id="resLucro" class="text-2xl font-black text-green-700"></p>
+                <p class="text-green-600 text-xs font-bold mt-1">ROI: <span id="resRoi"></span></p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function formatarMoeda(valor) {
+            return valor.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' });
+        }
+
+        function calcular() {
+            const inv = parseFloat(document.getElementById('investimento').value);
+            const leads = parseFloat(document.getElementById('leads').value);
+            const conv = parseFloat(document.getElementById('conversao').value) / 100;
+            const valorImovel = parseFloat(document.getElementById('valorImovel').value);
+            const comissaoPerc = parseFloat(document.getElementById('comissao').value) / 100;
+
+            if (inv && leads && valorImovel && comissaoPerc) {
+                const qtdVendas = Math.floor(leads * conv);
+                const receitaTotal = (qtdVendas * valorImovel) * comissaoPerc;
+                const roi = (receitaTotal / inv).toFixed(1);
+
+                document.getElementById('resVendas').innerText = `${qtdVendas} venda(s)`;
+                document.getElementById('resLucro').innerText = formatarMoeda(receitaTotal);
+                document.getElementById('resRoi').innerText = `${roi}x`;
+                document.getElementById('resultado').classList.remove('hidden');
+            } else {
+                alert("Por favor, preencha todos os campos.");
+            }
+        }
+    </script>
+</body>
+</html>
