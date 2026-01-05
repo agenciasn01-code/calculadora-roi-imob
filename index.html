@@ -5,7 +5,6 @@ document.getElementById('formCadastro').addEventListener('submit', function(e) {
     const btn = e.target.querySelector('button');
     const textoOriginal = btn.innerText;
     
-    // Feedback visual para o usuário
     btn.innerText = "Salvando dados... Aguarde";
     btn.disabled = true;
 
@@ -17,49 +16,23 @@ document.getElementById('formCadastro').addEventListener('submit', function(e) {
         cidade: document.getElementById('cidade').value
     };
 
-    // --- COLOQUE SUA URL DO GOOGLE APPS SCRIPT ABAIXO ---
-    const urlPlanilha = 'https://docs.google.com/spreadsheets/d/1ai1Kkn-45ptZhxQ5hg3qMg96d60s3p_63pWSj7dRASg/edit?gid=0#gid=0'; 
+    // LINK ATUALIZADO E CORRETO ABAIXO:
+    const urlPlanilha = 'https://script.google.com/macros/s/AKfycbzu4_ti2n5hGw2w1A2S9bD3BJWmlrry9Uv0wo0pI2iAyRFsL99B00i4dZtiYwIQW_kX8w/exec'; 
 
     fetch(urlPlanilha, {
         method: 'POST',
-        mode: 'no-cors', // Importante para evitar erros de segurança do navegador
+        mode: 'no-cors',
         body: JSON.stringify(dadosLead)
     })
     .then(() => {
-        // Sucesso: Esconde o formulário e mostra a calculadora
+        // Sucesso: Libera a calculadora
         document.getElementById('leadForm').classList.add('hidden');
         document.getElementById('calculadoraContainer').classList.remove('hidden');
     })
     .catch(error => {
         console.error("Erro ao enviar:", error);
-        alert("Houve um erro ao salvar seus dados. Verifique sua conexão e tente novamente.");
+        alert("Houve um erro ao salvar seus dados. Tente novamente.");
         btn.innerText = textoOriginal;
         btn.disabled = false;
     });
 });
-
-// Funções da Calculadora (Permanecem iguais)
-function formatarMoeda(valor) {
-    return valor.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' });
-}
-
-function calcular() {
-    const inv = parseFloat(document.getElementById('investimento').value);
-    const leads = parseFloat(document.getElementById('leads').value);
-    const conv = parseFloat(document.getElementById('conversao').value) / 100;
-    const valorImovel = parseFloat(document.getElementById('valorImovel').value);
-    const comissaoPerc = parseFloat(document.getElementById('comissao').value) / 100;
-
-    if (inv && leads && valorImovel && comissaoPerc) {
-        const qtdVendas = Math.floor(leads * conv);
-        const receitaTotal = (qtdVendas * valorImovel) * comissaoPerc;
-        const roi = (receitaTotal / inv).toFixed(1);
-
-        document.getElementById('resVendas').innerText = `${qtdVendas} venda(s)`;
-        document.getElementById('resLucro').innerText = formatarMoeda(receitaTotal);
-        document.getElementById('resRoi').innerText = `${roi}x`;
-        document.getElementById('resultado').classList.remove('hidden');
-    } else {
-        alert("Por favor, preencha todos os campos.");
-    }
-}
