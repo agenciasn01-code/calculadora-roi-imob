@@ -1,38 +1,165 @@
-// Lógica para capturar o formulário e enviar para a planilha
-document.getElementById('formCadastro').addEventListener('submit', function(e) {
-    e.preventDefault();
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de ROI Imobiliário</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-900 p-5 font-sans text-slate-100">
 
-    const btn = e.target.querySelector('button');
-    const textoOriginal = btn.innerText;
-    
-    btn.innerText = "Salvando dados... Aguarde";
-    btn.disabled = true;
+    <div class="max-w-md mx-auto">
+        
+        <div id="leadForm" class="bg-white p-8 rounded-2xl shadow-2xl text-slate-800">
+            <div class="text-center mb-6">
+                <h1 class="text-2xl font-extrabold text-slate-900">Acesse a Calculadora</h1>
+                <p class="text-slate-500 text-sm">Preencha os dados para liberar seu cálculo de ROI</p>
+            </div>
 
-    const dadosLead = {
-        nome: document.getElementById('nome').value,
-        email: document.getElementById('email').value,
-        telefone: document.getElementById('telefone').value,
-        profissao: document.getElementById('profissao').value,
-        cidade: document.getElementById('cidade').value
-    };
+            <form id="formCadastro" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-500 uppercase">Nome Completo</label>
+                    <input type="text" id="nome" required class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500" placeholder="Seu nome">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-500 uppercase">E-mail</label>
+                    <input type="email" id="email" required class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500" placeholder="seu@email.com">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-500 uppercase">Telefone / WhatsApp</label>
+                    <input type="tel" id="telefone" required class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500" placeholder="(15) 99999-9999">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-500 uppercase">Profissão</label>
+                    <select id="profissao" required class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500">
+                        <option value="">Selecione...</option>
+                        <option value="Corretor Autônomo">Corretor Autônomo</option>
+                        <option value="Dono de Imobiliária">Dono de Imobiliária</option>
+                        <option value="Gestor de Tráfego">Gestor de Tráfego</option>
+                        <option value="Outro">Outro</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-500 uppercase">Cidade</label>
+                    <input type="text" id="cidade" required class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500" placeholder="Sua cidade">
+                </div>
 
-    // LINK ATUALIZADO E CORRETO ABAIXO:
-    const urlPlanilha = 'https://script.google.com/macros/s/AKfycbzu4_ti2n5hGw2w1A2S9bD3BJWmlrry9Uv0wo0pI2iAyRFsL99B00i4dZtiYwIQW_kX8w/exec'; 
+                <button type="submit" class="w-full bg-green-600 text-white py-4 rounded-xl font-bold text-lg hover:bg-green-700 transition-all shadow-lg active:scale-95">
+                    Liberar Calculadora
+                </button>
+            </form>
+        </div>
 
-    fetch(urlPlanilha, {
-        method: 'POST',
-        mode: 'no-cors',
-        body: JSON.stringify(dadosLead)
-    })
-    .then(() => {
-        // Sucesso: Libera a calculadora
-        document.getElementById('leadForm').classList.add('hidden');
-        document.getElementById('calculadoraContainer').classList.remove('hidden');
-    })
-    .catch(error => {
-        console.error("Erro ao enviar:", error);
-        alert("Houve um erro ao salvar seus dados. Tente novamente.");
-        btn.innerText = textoOriginal;
-        btn.disabled = false;
-    });
-});
+        <div id="calculadoraContainer" class="hidden bg-white p-8 rounded-2xl shadow-2xl text-slate-800">
+            <div class="text-center mb-6">
+                <h1 class="text-2xl font-extrabold text-slate-900">Calculadora de ROI</h1>
+                <p class="text-slate-500 text-sm">Mercado Imobiliário</p>
+            </div>
+            
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-500 uppercase">Investimento Total (R$)</label>
+                    <input type="number" id="investimento" class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500" placeholder="Ex: 2000">
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-500 uppercase">Nº de Leads</label>
+                        <input type="number" id="leads" class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500" placeholder="Ex: 50">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-500 uppercase">Conversão %</label>
+                        <input type="number" id="conversao" class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500" placeholder="1">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-500 uppercase">Valor do Imóvel (R$)</label>
+                    <input type="number" id="valorImovel" class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500" placeholder="Ex: 500000">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-500 uppercase">Sua Comissão (%)</label>
+                    <input type="number" id="comissao" class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500" placeholder="Ex: 5">
+                </div>
+                <button onclick="calcular()" class="w-full bg-blue-600 text-white py-4 rounded-xl font-bold text-lg hover:bg-blue-700 transition-all shadow-lg active:scale-95">Calcular Retorno</button>
+            </div>
+
+            <div id="resultado" class="mt-8 hidden space-y-4 border-t border-slate-100 pt-6">
+                <div class="flex justify-between items-center bg-blue-50 p-3 rounded-lg text-blue-800 font-bold">
+                    <span>Vendas Estimadas:</span>
+                    <span id="resVendas"></span>
+                </div>
+                <div class="bg-green-100 p-4 rounded-xl text-center">
+                    <p class="text-green-800 text-sm font-medium uppercase tracking-wider">Comissão Total Bruta</p>
+                    <p id="resLucro" class="text-2xl font-black text-green-700"></p>
+                    <p class="text-green-600 text-xs font-bold mt-1">ROI: <span id="resRoi"></span></p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // Lógica de envio de leads
+        document.getElementById('formCadastro').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const btn = e.target.querySelector('button');
+            const textoOriginal = btn.innerText;
+            
+            btn.innerText = "Salvando dados... Aguarde";
+            btn.disabled = true;
+
+            const dadosLead = {
+                nome: document.getElementById('nome').value,
+                email: document.getElementById('email').value,
+                telefone: document.getElementById('telefone').value,
+                profissao: document.getElementById('profissao').value,
+                cidade: document.getElementById('cidade').value
+            };
+
+            const urlPlanilha = 'https://script.google.com/macros/s/AKfycbzu4_ti2n5hGw2w1A2S9bD3BJWmlrry9Uv0wo0pI2iAyRFsL99B00i4dZtiYwIQW_kX8w/exec'; 
+
+            fetch(urlPlanilha, {
+                method: 'POST',
+                mode: 'no-cors',
+                body: JSON.stringify(dadosLead)
+            })
+            .then(() => {
+                document.getElementById('leadForm').classList.add('hidden');
+                document.getElementById('calculadoraContainer').classList.remove('hidden');
+            })
+            .catch(error => {
+                console.error("Erro ao enviar:", error);
+                alert("Houve um erro ao salvar seus dados. Tente novamente.");
+                btn.innerText = textoOriginal;
+                btn.disabled = false;
+            });
+        });
+
+        // Funções da Calculadora
+        function formatarMoeda(valor) {
+            return valor.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' });
+        }
+
+        function calcular() {
+            const inv = parseFloat(document.getElementById('investimento').value);
+            const leads = parseFloat(document.getElementById('leads').value);
+            const conv = parseFloat(document.getElementById('conversao').value) / 100;
+            const valorImovel = parseFloat(document.getElementById('valorImovel').value);
+            const comissaoPerc = parseFloat(document.getElementById('comissao').value) / 100;
+
+            if (inv && leads && valorImovel && comissaoPerc) {
+                const qtdVendas = Math.floor(leads * conv);
+                const receitaTotal = (qtdVendas * valorImovel) * comissaoPerc;
+                const roi = (receitaTotal / inv).toFixed(1);
+
+                document.getElementById('resVendas').innerText = `${qtdVendas} venda(s)`;
+                document.getElementById('resLucro').innerText = formatarMoeda(receitaTotal);
+                document.getElementById('resRoi').innerText = `${roi}x`;
+                document.getElementById('resultado').classList.remove('hidden');
+            } else {
+                alert("Por favor, preencha todos os campos.");
+            }
+        }
+    </script>
+</body>
+</html>
